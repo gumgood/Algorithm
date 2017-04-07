@@ -5,8 +5,7 @@
 using namespace std;
 
 typedef long long Data;
-struct ST{
-	// Segment Tree
+struct ST{ // Segment Tree
 	int n;
 	vector<Data> t;
 	ST(const vector<Data> &in){
