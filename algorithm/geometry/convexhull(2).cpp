@@ -1,49 +1,62 @@
-// graham_scan O(nlogn)
-#include<cstdio>
-#include<vector>
-#include<algorithm>
-
+// convexhull O(nlogn)
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#include <cstdio>
 using namespace std;
 
-typedef pair<long long, long long> Point;
+typedef pair<long long,long long> point;
 
-long long ccw(Point a, Point b, Point c){
-	long long r = a.first*b.second + b.first*c.second + c.first*a.second
-		- b.first*a.second - c.first*b.second - a.first*c.second;
-	return r;
+bool cw(const point &a,const point &b,const point &c){
+	return (b.first-a.first)*(c.second-a.second)
+		- (b.second-a.second)*(c.first-a.first) < 0;
 }
 
-vector<Point> convexhull(vector<Point> p){
-	swap(p[0], *min_element(p.begin(), p.end()));
-
-	for (int i=1; i<p.size(); ++i)
-		p[i].first -= p[0].first, p[i].second -= p[0].second;
-	sort(p.begin()+1, p.end(), [](Point a, Point b){
-		long long t = a.first*b.second - b.first*a.second;
-		if (t == 0) return a < b;
-		return t > 0;
-	});
-	for (int i=1; i<p.size(); ++i)
-		p[i].first += p[0].first, p[i].second += p[0].second;
-
-	vector<Point> r;
-	r.push_back(p[0]);
-	r.push_back(p[1]);
-	for (int i=2; i<p.size(); ++i){
-		while (r.size()>=2 && !(ccw(r[r.size()-2], r[r.size()-1], p[i]) > 0))
-			r.pop_back();
-		r.push_back(p[i]);
-	}
-	return r;
+vector<point> convexHull(vector<point> p){
+	int n=p.size(), k=0;
+	if(n<=1) return p;
+	sort(p.begin(),p.end());
+	vector<point> q(n*2);
+	for(int i=0; i < n; q[k++]=p[i++])
+		for(; k>=2&&!cw(q[k-2],q[k-1],p[i]); --k);
+	for(int i=n-2,t=k; i>=0; q[k++]=p[i--])
+		for(; k > t && !cw(q[k-2],q[k-1],p[i]); --k);
+	q.resize(k-1-(q[0]==q[1]));
+	return q;
 }
 
-int main(){
-	vector<Point> p;
-	int n; scanf("%d", &n);
-	for (int i=0; i<n; ++i){
-		long long x, y;
-		scanf("%lld%lld", &x, &y);
-		p.push_back(Point(x, y));
+long long area(const point &a,const point &b,const point &c) {
+	return abs((b.first-a.first)*(c.second-a.second)
+		- (b.second-a.second)*(c.first-a.first));
+}
+
+double dist(const point &a,const point &b) {
+	return (a.first-b.first)*(a.first)
+}
+
+double diameter(const vector<point> &p) {
+	vector<point> h=convexHull(p);
+	int m=h.size(),k=1;
+	if(m==1) return 0;
+	if(m==2) return dist(h[0],h[1]);
+	while(area(h[m-1],h[0],h[(k+1)%m]) > area(h[m-1],h[0],h[k])) ++k;
+	double res=0;
+	for(int i=0,j=k; i<=k && j < m; i++) {
+		res=max(res,dist(h[i],h[j]));
+		while(j < m && area(h[i],h[(i+1)%m],h[(j+1)%m]) > area(h[i],h[(i+1)%m],h[j]))
+		{ res=max(res,dist(h[i],h[(j+1)%m])); ++j; }
 	}
-	printf("%d", convexhull(p).size());
+	return res;
+}
+
+int main() {
+	vector<point> poly;
+	int n; scanf("%d",&n);
+	for(int i=0;i<n;++i){
+		long long x,y; scanf("%lld%lld",&x,&y);
+		poly.push_back(point(x,y));
+	}
+	vector<point> t = convexHull(poly);
+	for(int i=0;i<t.size();++i)
+		printf("%lld %lld\n",t[i].first,t[i].second);
 }
