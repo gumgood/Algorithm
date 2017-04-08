@@ -36,5 +36,5 @@ long long prim(int n,int s){
 }
 
 int main(){
-
+	return 0;
 }
