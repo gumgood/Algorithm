@@ -1,5 +1,4 @@
 // O(ElogV)
-// https://www.acmicpc.net/problem/1922
 #include<cstdio>
 #include<vector>
 #include<algorithm>
