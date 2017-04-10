@@ -3,12 +3,9 @@
 #include<vector>
 #include<algorithm>
 using namespace std;
-const int _INF = numeric_limits<int>::min();
 
-int arr[40001];
-
-int LIS(int n){
-	vector<int> IS(1, _INF);
+int LIS(vector<int>& arr,int n){
+	vector<int> IS(1, -99999999);
 	for(int i=0; i<n; ++i){
 		if(IS.back() < arr[i])
 			IS.push_back(arr[i]);
@@ -20,7 +17,8 @@ int LIS(int n){
 
 int main(){
 	int n; scanf("%d", &n);
+	vector<int> arr(n);
 	for(int i=0; i<n; ++i)
-		scanf("%d", arr+i);
-	printf("%d", LIS(n));
+		scanf("%d", &arr[i]);
+	printf("%d", LIS(arr,n));
 }
