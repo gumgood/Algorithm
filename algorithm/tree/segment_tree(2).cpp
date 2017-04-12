@@ -23,7 +23,7 @@ struct ST{ // Segment Tree
 	void upd(int n, int s, int e, int p, Data v){
 		// if nth node = [s,e], update pth element to 'v';
 		// ex) upd(1, 1, n, p, v);
-		if(p<s || p>e) return;
+		if(p<s || e<p) return;
 		if(s==e) t[n] = v;
 		else{
 			upd(2*n, s, (s+e)/2, p, v);
@@ -35,7 +35,7 @@ struct ST{ // Segment Tree
 	Data query(int n, int s, int e, int l, int r){
 		// If nth node = [s,e], then [l,r] = ?
 		// ex) query(1, 1, n, l, r);
-		if(l>e || r<s) return idt;
+		if(r<s || e<l) return idt;
 		if(l<=s && e<=r) return t[n];
 		Data a = query(2*n, s, (s+e)/2, l, r);
 		Data b = query(2*n+1, (s+e)/2+1, e, l, r);
