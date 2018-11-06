@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+typedef pair<int,int> ii;
+
+int n;
+vector<ii> in;
+
+int solve(){
+    sort(in.begin(),in.end());
+    
+    int ret = 0, _min = 999999;
+    for(int i=0;i<in.size();++i){
+        if(_min > in[i].second){
+            _min = in[i].second;
+            ret++;
+        }
+    }
+    return ret;
+}
+
+int main(){
+    int t;
+    scanf("%d",&t);
+    while(t--){
+        in.clear();
+        scanf("%d",&n);
+        for(int i=0;i<n;++i){
+            int x, y;
+            scanf("%d%d",&x,&y);
+            in.push_back(ii(x,y));
+       }
+
+       printf("%d\n",solve());
+    }
+
+    return 0;
+}
